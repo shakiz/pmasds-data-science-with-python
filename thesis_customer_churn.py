@@ -176,3 +176,14 @@ def DfPrepPipeline(df_predict,df_train_Cols,minVec,maxVec):
     df_predict = df_predict[df_train_Cols]
     return df_predict
 
+
+# Function to give best model score and parameters
+def best_model(model):
+    print(model.best_score_)    
+    print(model.best_params_)
+    print(model.best_estimator_)
+def get_auc_scores(y_actual, method,method2):
+    auc_score = roc_auc_score(y_actual, method); 
+    fpr_df, tpr_df, _ = roc_curve(y_actual, method2); 
+    return (auc_score, fpr_df, tpr_df)
+
