@@ -78,3 +78,16 @@ df_train['BalanceSalaryRatio'] = df_train.Balance/df_train.EstimatedSalary
 sns.boxplot(y='BalanceSalaryRatio',x = 'Exited', hue = 'Exited',data = df_train)
 plt.ylim(-1, 5)
 
+# Given that tenure is a 'function' of age, we introduce a variable aiming to standardize tenure over age:
+df_train['TenureByAge'] = df_train.Tenure/(df_train.Age)
+sns.boxplot(y='TenureByAge',x = 'Exited', hue = 'Exited',data = df_train)
+plt.ylim(-1, 1)
+plt.show()
+
+'''Lastly we introduce a variable to capture credit score given age to take into account credit behaviour visavis adult life
+:-)'''
+df_train['CreditScoreGivenAge'] = df_train.CreditScore/(df_train.Age)
+
+# Resulting Data Frame
+df_train.head()
+
