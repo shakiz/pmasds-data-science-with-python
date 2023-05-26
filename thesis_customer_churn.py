@@ -142,6 +142,50 @@ from sklearn.metrics import classification_report
 from sklearn.metrics import roc_auc_score
 from sklearn.metrics import roc_curve
 
+# Function to give best model score and parameters
+def best_model(model):
+    print(model.best_score_)    
+    print(model.best_params_)
+    print(model.best_estimator_)
+def get_auc_scores(y_actual, method,method2):
+    auc_score = roc_auc_score(y_actual, method); 
+    fpr_df, tpr_df, _ = roc_curve(y_actual, method2); 
+    return (auc_score, fpr_df, tpr_df)
+
+
+# Fit primal logistic regression
+param_grid = {'C': [0.1,0.5,1,10,50,100], 'max_iter': [250], 'fit_intercept':[True],'intercept_scaling':[1],
+              'penalty':['l2'], 'tol':[0.00001,0.0001,0.000001]}
+log_primal_Grid = GridSearchCV(LogisticRegression(solver='lbfgs'),param_grid, cv=10, refit=True, verbose=0)
+log_primal_Grid.fit(df_train.loc[:, df_train.columns != 'Exited'],df_train.Exited)
+best_model(log_primal_Grid)
+
+
+
+# Fit logistic regression with degree 2 polynomial kernel
+param_grid = {'C': [0.1,10,50], 'max_iter': [300,500], 'fit_intercept':[True],'intercept_scaling':[1],'penalty':['l2'],
+              'tol':[0.0001,0.000001]}
+poly2 = PolynomialFeatures(degree=2)
+df_train_pol2 = poly2.fit_transform(df_train.loc[:, df_train.columns != 'Exited'])
+log_pol2_Grid = GridSearchCV(LogisticRegression(solver = 'liblinear'),param_grid, cv=5, refit=True, verbose=0)
+log_pol2_Grid.fit(df_train_pol2,df_train.Exited)
+best_model(log_pol2_Grid)
+
+
+# Fit SVM with RBF Kernel
+param_grid = {'C': [0.5,100,150], 'gamma': [0.1,0.01,0.001],'probability':[True],'kernel': ['rbf']}
+SVM_grid = GridSearchCV(SVC(), param_grid, cv=3, refit=True, verbose=0)
+SVM_grid.fit(df_train.loc[:, df_train.columns != 'Exited'],df_train.Exited)
+best_model(SVM_grid)
+
+
+# Fit SVM with pol kernel
+param_grid = {'C': [0.5,1,10,50,100], 'gamma': [0.1,0.01,0.001],'probability':[True],'kernel': ['poly'],'degree':[2,3] }
+SVM_grid = GridSearchCV(SVC(), param_grid, cv=3, refit=True, verbose=0)
+SVM_grid.fit(df_train.loc[:, df_train.columns != 'Exited'],df_train.Exited)
+best_model(SVM_grid)
+
+
 
 
 # data prep pipeline for test data
@@ -175,15 +219,4 @@ def DfPrepPipeline(df_predict,df_train_Cols,minVec,maxVec):
     # Ensure that The variables are ordered in the same way as was ordered in the train set
     df_predict = df_predict[df_train_Cols]
     return df_predict
-
-
-# Function to give best model score and parameters
-def best_model(model):
-    print(model.best_score_)    
-    print(model.best_params_)
-    print(model.best_estimator_)
-def get_auc_scores(y_actual, method,method2):
-    auc_score = roc_auc_score(y_actual, method); 
-    fpr_df, tpr_df, _ = roc_curve(y_actual, method2); 
-    return (auc_score, fpr_df, tpr_df)
 
