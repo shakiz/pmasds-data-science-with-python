@@ -91,3 +91,28 @@ df_train['CreditScoreGivenAge'] = df_train.CreditScore/(df_train.Age)
 # Resulting Data Frame
 df_train.head()
 
+# Arrange columns by data type for easier manipulation
+continuous_vars = ['CreditScore',  'Age', 'Tenure', 'Balance','NumOfProducts', 'EstimatedSalary', 'BalanceSalaryRatio',
+                   'TenureByAge','CreditScoreGivenAge']
+cat_vars = ['HasCrCard', 'IsActiveMember','Geography', 'Gender']
+df_train = df_train[['Exited'] + continuous_vars + cat_vars]
+df_train.head()
+
+'''For the one hot variables, we change 0 to -1 so that the models can capture a negative relation 
+where the attribute in inapplicable instead of 0'''
+df_train.loc[df_train.HasCrCard == 0, 'HasCrCard'] = -1
+df_train.loc[df_train.IsActiveMember == 0, 'IsActiveMember'] = -1
+df_train.head()
+
+
+# One hot encode the categorical variables
+lst = ['Geography', 'Gender']
+remove = list()
+for i in lst:
+    if (df_train[i].dtype == np.str or df_train[i].dtype == np.object):
+        for j in df_train[i].unique():
+            df_train[i+'_'+j] = np.where(df_train[i] == j,1,-1)
+        remove.append(i)
+df_train = df_train.drop(remove, axis=1)
+df_train.head()
+
