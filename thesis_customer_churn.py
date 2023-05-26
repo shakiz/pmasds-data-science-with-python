@@ -73,3 +73,8 @@ df_test = df.drop(df_train.index)
 print(len(df_train))
 print(len(df_test))
 
+
+df_train['BalanceSalaryRatio'] = df_train.Balance/df_train.EstimatedSalary
+sns.boxplot(y='BalanceSalaryRatio',x = 'Exited', hue = 'Exited',data = df_train)
+plt.ylim(-1, 5)
+
