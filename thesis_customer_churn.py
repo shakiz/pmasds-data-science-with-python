@@ -49,3 +49,27 @@ ax1.axis('equal')
 plt.title("Proportion of customer churned and retained", size = 20)
 plt.show()
 
+# We first review the 'Status' relation with categorical variables
+fig, axarr = plt.subplots(2, 2, figsize=(20, 12))
+sns.countplot(x='Geography', hue = 'Exited',data = df, ax=axarr[0][0])
+sns.countplot(x='Gender', hue = 'Exited',data = df, ax=axarr[0][1])
+sns.countplot(x='HasCrCard', hue = 'Exited',data = df, ax=axarr[1][0])
+sns.countplot(x='IsActiveMember', hue = 'Exited',data = df, ax=axarr[1][1])
+
+
+# Relations based on the continuous data attributes
+fig, axarr = plt.subplots(3, 2, figsize=(20, 12))
+sns.boxplot(y='CreditScore',x = 'Exited', hue = 'Exited',data = df, ax=axarr[0][0])
+sns.boxplot(y='Age',x = 'Exited', hue = 'Exited',data = df , ax=axarr[0][1])
+sns.boxplot(y='Tenure',x = 'Exited', hue = 'Exited',data = df, ax=axarr[1][0])
+sns.boxplot(y='Balance',x = 'Exited', hue = 'Exited',data = df, ax=axarr[1][1])
+sns.boxplot(y='NumOfProducts',x = 'Exited', hue = 'Exited',data = df, ax=axarr[2][0])
+sns.boxplot(y='EstimatedSalary',x = 'Exited', hue = 'Exited',data = df, ax=axarr[2][1])
+
+
+# Split Train, test data
+df_train = df.sample(frac=0.8,random_state=200)
+df_test = df.drop(df_train.index)
+print(len(df_train))
+print(len(df_test))
+
