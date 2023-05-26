@@ -124,6 +124,25 @@ df_train[continuous_vars] = (df_train[continuous_vars]-minVec)/(maxVec-minVec)
 df_train.head()
 
 
+# Support functions
+from sklearn.preprocessing import PolynomialFeatures
+from sklearn.model_selection import cross_val_score
+from sklearn.model_selection import GridSearchCV
+from scipy.stats import uniform
+
+# Fit models
+from sklearn.linear_model import LogisticRegression
+from sklearn.svm import SVC
+from sklearn.ensemble import RandomForestClassifier
+from xgboost import XGBClassifier
+
+# Scoring functions
+from sklearn.metrics import accuracy_score
+from sklearn.metrics import classification_report
+from sklearn.metrics import roc_auc_score
+from sklearn.metrics import roc_curve
+
+
 
 # data prep pipeline for test data
 def DfPrepPipeline(df_predict,df_train_Cols,minVec,maxVec):
