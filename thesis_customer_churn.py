@@ -239,6 +239,17 @@ XGB = XGBClassifier(base_score=0.5, booster='gbtree', colsample_bylevel=1,colsam
                     reg_lambda=1, scale_pos_weight=1, seed=None, silent=True, subsample=1)
 XGB.fit(df_train.loc[:, df_train.columns != 'Exited'],df_train.Exited)
 
+print(classification_report(df_train.Exited, log_primal.predict(df_train.loc[:, df_train.columns != 'Exited'])))
+
+print(classification_report(df_train.Exited,  log_pol2.predict(df_train_pol2)))
+
+print(classification_report(df_train.Exited,  SVM_RBF.predict(df_train.loc[:, df_train.columns != 'Exited'])))
+
+print(classification_report(df_train.Exited,  SVM_POL.predict(df_train.loc[:, df_train.columns != 'Exited'])))
+
+print(classification_report(df_train.Exited,  RF.predict(df_train.loc[:, df_train.columns != 'Exited'])))
+
+print(classification_report(df_train.Exited,  XGB.predict(df_train.loc[:, df_train.columns != 'Exited'])))
 
 
 
