@@ -278,8 +278,6 @@ plt.legend(loc='best')
 #plt.savefig('roc_results_ratios.png')
 plt.show()
 
-
-
 # data prep pipeline for test data
 def DfPrepPipeline(df_predict,df_train_Cols,minVec,maxVec):
     # Add new features
@@ -311,4 +309,26 @@ def DfPrepPipeline(df_predict,df_train_Cols,minVec,maxVec):
     # Ensure that The variables are ordered in the same way as was ordered in the train set
     df_predict = df_predict[df_train_Cols]
     return df_predict
+
+# Make the data transformation for test data
+df_test = DfPrepPipeline(df_test,df_train.columns,minVec,maxVec)
+df_test = df_test.mask(np.isinf(df_test))
+df_test = df_test.dropna()
+df_test.shape
+
+
+print(classification_report(df_test.Exited,  RF.predict(df_test.loc[:, df_test.columns != 'Exited'])))
+
+
+auc_RF_test, fpr_RF_test, tpr_RF_test = get_auc_scores(df_test.Exited, RF.predict(df_test.loc[:, df_test.columns != 'Exited']),
+                                                       RF.predict_proba(df_test.loc[:, df_test.columns != 'Exited'])[:,1])
+plt.figure(figsize = (12,6), linewidth= 1)
+plt.plot(fpr_RF_test, tpr_RF_test, label = 'RF score: ' + str(round(auc_RF_test, 5)))
+plt.plot([0,1], [0,1], 'k--', label = 'Random: 0.5')
+plt.xlabel('False positive rate')
+plt.ylabel('True positive rate')
+plt.title('ROC Curve')
+plt.legend(loc='best')
+#plt.savefig('roc_results_ratios.png')
+plt.show()
 
