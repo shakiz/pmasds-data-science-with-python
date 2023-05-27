@@ -199,7 +199,7 @@ xgb_grid.fit(df_train.loc[:, df_train.columns != 'Exited'],df_train.Exited)
 best_model(xgb_grid)
 
 # Fit primal logistic regression
-log_primal = LogisticRegression(C=100, class_weight=None, dual=False, fit_intercept=True,intercept_scaling=1, max_iter=250, multi_class='warn',n_jobs=None, 
+log_primal = LogisticRegression(C=100, class_weight=None, dual=False, fit_intercept=True,intercept_scaling=1, max_iter=250, multi_class='ovr',n_jobs=None, 
                                 penalty='l2', random_state=None, solver='lbfgs',tol=1e-05, verbose=0, warm_start=False)
 log_primal.fit(df_train.loc[:, df_train.columns != 'Exited'],df_train.Exited)
 
@@ -208,7 +208,7 @@ log_primal.fit(df_train.loc[:, df_train.columns != 'Exited'],df_train.Exited)
 # Fit logistic regression with pol 2 kernel
 poly2 = PolynomialFeatures(degree=2)
 df_train_pol2 = poly2.fit_transform(df_train.loc[:, df_train.columns != 'Exited'])
-log_pol2 = LogisticRegression(C=10, class_weight=None, dual=False, fit_intercept=True,intercept_scaling=1, max_iter=300, multi_class='warn', n_jobs=None, 
+log_pol2 = LogisticRegression(C=10, class_weight=None, dual=False, fit_intercept=True,intercept_scaling=1, max_iter=300, multi_class='ovr', n_jobs=None, 
                               penalty='l2', random_state=None, solver='liblinear',tol=0.0001, verbose=0, warm_start=False)
 log_pol2.fit(df_train_pol2,df_train.Exited)
 
@@ -227,7 +227,7 @@ SVM_POL.fit(df_train.loc[:, df_train.columns != 'Exited'],df_train.Exited)
 
 # Fit Random Forest classifier
 RF = RandomForestClassifier(bootstrap=True, class_weight=None, criterion='gini',max_depth=8, max_features=6, max_leaf_nodes=None,min_impurity_decrease=0.0,
-                            min_impurity_split=None,min_samples_leaf=1, min_samples_split=3,min_weight_fraction_leaf=0.0, n_estimators=50, n_jobs=None,
+                            min_samples_leaf=1, min_samples_split=3,min_weight_fraction_leaf=0.0, n_estimators=50, n_jobs=None,
                             oob_score=False, random_state=None, verbose=0,warm_start=False)
 RF.fit(df_train.loc[:, df_train.columns != 'Exited'],df_train.Exited)
 
@@ -309,6 +309,7 @@ def DfPrepPipeline(df_predict,df_train_Cols,minVec,maxVec):
     # Ensure that The variables are ordered in the same way as was ordered in the train set
     df_predict = df_predict[df_train_Cols]
     return df_predict
+
 
 # Make the data transformation for test data
 df_test = DfPrepPipeline(df_test,df_train.columns,minVec,maxVec)
